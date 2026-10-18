@@ -14,7 +14,8 @@ export class Real {
     } else if (value instanceof Fraction) {
       this.value = value.isNaN() ? Number.NaN : value
     } else if (/^\s*[+-]?\d*\.\d+([Ee][+-]?\d+)?\s*$/.test(value)) {
-      this.value = parseFloat(value)
+      const flt = parseFloat(value)
+      this.value = Number.isInteger(flt) ? new Fraction(flt, 1) : flt
     } else {
       const fraction = Fraction.parse(value)
       this.value = fraction.isNaN() ? Number.NaN : fraction
