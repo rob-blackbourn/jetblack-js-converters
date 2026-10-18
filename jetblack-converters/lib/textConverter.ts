@@ -23,9 +23,10 @@ function tryParseReal(text?: string): Real | undefined {
   if (!text) {
     return undefined
   } else {
-    return new Real(text)
+    return Real.parse(text)
   }
 }
+
 export function parseIngredientLine(text: string): IngredientLine {
   const matches = text.match(PATTERN)
   return {

@@ -9,7 +9,7 @@ describe('Real', () => {
   })
 
   it('should construct a Real from a string', () => {
-    const r = new Real('1.5')
+    const r = Real.parse('1.5')
     expect(r.valueOf()).toBe(1.5)
     expect(r.eq(1.5)).toBeTruthy()
     expect(typeof r.value).toBe('number')
@@ -44,7 +44,7 @@ describe('Real', () => {
   })
 
   it('should handle scientific notation', () => {
-    const r1 = new Real('2.3e9')
+    const r1 = Real.parse('2.3e9')
     const r2 = new Real(2.3e9)
     expect(r1).toEqual(r2)
   })

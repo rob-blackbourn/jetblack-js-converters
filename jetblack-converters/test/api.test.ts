@@ -11,7 +11,7 @@ describe('typed public API', () => {
     const half = new Real(new Fraction(1, 2))
     expect(half.add(half).toString()).toBe('1')
     expect(half.add(0.25).valueOf()).toBe(0.75)
-    expect(half.mul('1/3').toString()).toBe('1/6')
+    expect(half.mul(Real.parse('1/3')).toString()).toBe('1/6')
     expect(new Real(half).eq(half)).toBe(true)
     expect(new Real(Infinity).eq(Infinity)).toBe(true)
     expect(new Real(NaN).eq(NaN)).toBe(false)

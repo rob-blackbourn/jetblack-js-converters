@@ -39,7 +39,7 @@ describe('text conversion', () => {
       {
         text: '2.3e9 grains of pepper',
         expected: {
-          quantity: new Real('2.3e9'),
+          quantity: new Real(2.3e9),
           unit: undefined,
           ingredient: 'grains of pepper',
           treatment: undefined
@@ -84,7 +84,7 @@ describe('text conversion', () => {
       {
         text: '1/4 cup fish sauce',
         expected: {
-          quantity: new Real('1/4'),
+          quantity: Real.parse('1/4'),
           unit: 'cup',
           ingredient: 'fish sauce',
           treatment: undefined
@@ -102,7 +102,7 @@ describe('text conversion', () => {
       {
         text: '2 1/2 red onions, finely chopped',
         expected: {
-          quantity: new Real('2 1/2'),
+          quantity: Real.parse('2 1/2'),
           unit: undefined,
           ingredient: 'red onions',
           treatment: 'finely chopped'
