@@ -1,3 +1,7 @@
+function tryParseInt(text: string | undefined, defaultValue: number): number {
+  return text ? parseInt(text) : defaultValue
+}
+
 /**
  * Creates an instance of a Fraction.
  *
@@ -59,28 +63,19 @@ export class Fraction {
     }
   }
 
-  static parse(s: string): Fraction {
-    let result, whole, numerator, denominator
-    if ((result = /^\s*([+-]?\d+)\s+(\d+)\s*\/\s*(\d+)\s*$/.exec(s))) {
-      // Fraction with whole part
-      whole = parseInt(result[1])
-      numerator = parseInt(result[2])
-      denominator = parseInt(result[3])
-    } else if ((result = /^\s*([+-]?\d+)\s*\/\s*(\d+)\s*$/.exec(s))) {
-      // Fraction
-      whole = 0
-      numerator = parseInt(result[1])
-      denominator = parseInt(result[2])
-    } else if ((result = /^\s*([+-]?\d+)\s*$/.exec(s))) {
-      // Whole
-      whole = 0
-      numerator = parseInt(result[1])
-      denominator = 1
-    } else {
-      return new Fraction()
-    }
+  static PATTERN =
+    /^\s*(?<sign>-)?(?:(?<whole>[1-9]\d*)(?:\s+|$))?((?<numerator>[1-9]\d*)\s*\/\s*(?<denominator>[1-9]\d*))?\s*$/
 
-    return new Fraction(numerator + whole * denominator, denominator)
+  static parse(text: string): Fraction {
+    let matches = text.match(Fraction.PATTERN)
+    if (!matches || !matches.groups) {
+      return new Fraction(0, 0)
+    } else {
+      const whole = tryParseInt(matches.groups.whole, 0)
+      const numerator = tryParseInt(matches.groups.numerator, 0)
+      const denominator = tryParseInt(matches.groups.denominator, 1)
+      return new Fraction(numerator + whole * denominator, denominator)
+    }
   }
 
   toString(): string {

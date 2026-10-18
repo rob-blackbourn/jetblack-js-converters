@@ -40,6 +40,13 @@ describe('numbers', () => {
     expect(f3.denominator).toBe(2)
   })
 
+  it('Should parse', () => {
+    expect(Fraction.parse('1').toString()).toBe('1')
+    expect(Fraction.parse('1/2').toString()).toBe('1/2')
+    expect(Fraction.parse('3 1/2').toString()).toBe('3 1/2')
+    expect(Fraction.parse('error').toString()).toBe('NaN')
+  })
+
   it('should print and parse', () => {
     const a1 = new Fraction(3, 2)
     const a2 = a1.toString()
