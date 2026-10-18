@@ -1,7 +1,7 @@
-import { REPOSITORY } from './repository'
+import { Real } from './numbers'
 
 export type IngredientLine = {
-  quantity?: string
+  quantity?: Real
   unit?: string
   ingredient?: string
   treatment?: string
@@ -19,10 +19,17 @@ const PATTERN = new RegExp(
   `^(?<quantity>-?${FRACTION_PATTERN}|${REAL_PATTERN}|0)?\\s*(?:(?<unit>${UNIT_PATTERN})s?(\\s+of)?\\s)?\\s*(?<ingredient>[^,]*)(?:\\s*,\\s*(?<treatment>.*))?$`
 )
 
+function tryParseReal(text?: string): Real | undefined {
+  if (!text) {
+    return undefined
+  } else {
+    return new Real(text)
+  }
+}
 export function parseIngredientLine(text: string): IngredientLine {
   const matches = text.match(PATTERN)
   return {
-    quantity: matches?.groups?.quantity,
+    quantity: tryParseReal(matches?.groups?.quantity),
     unit: matches?.groups?.unit,
     ingredient: matches?.groups?.ingredient,
     treatment: matches?.groups?.treatment

@@ -1,3 +1,4 @@
+import { Real, Fraction } from '../lib'
 import { IngredientLine, parseIngredientLine } from '../lib/textConverter'
 
 type IngredientLineFixture = {
@@ -11,7 +12,7 @@ describe('text conversion', () => {
       {
         text: '2 400 g tins of plum peeled tomatoes, crushed',
         expected: {
-          quantity: '2',
+          quantity: new Real(2),
           unit: undefined,
           ingredient: '400 g tins of plum peeled tomatoes',
           treatment: 'crushed'
@@ -20,7 +21,7 @@ describe('text conversion', () => {
       {
         text: '3 large eggs, lightly beaten',
         expected: {
-          quantity: '3',
+          quantity: new Real(3),
           unit: 'large',
           ingredient: 'eggs',
           treatment: 'lightly beaten'
@@ -29,7 +30,7 @@ describe('text conversion', () => {
       {
         text: '2 stalks of lemongrass',
         expected: {
-          quantity: '2',
+          quantity: new Real(2),
           unit: 'stalk',
           ingredient: 'lemongrass',
           treatment: undefined
@@ -38,7 +39,7 @@ describe('text conversion', () => {
       {
         text: '2.3e9 grains of pepper',
         expected: {
-          quantity: '2.3e9',
+          quantity: new Real('2.3e9'),
           unit: undefined,
           ingredient: 'grains of pepper',
           treatment: undefined
@@ -47,7 +48,7 @@ describe('text conversion', () => {
       {
         text: '2 slices of lemon, juice only',
         expected: {
-          quantity: '2',
+          quantity: new Real(2),
           unit: 'slice',
           ingredient: 'lemon',
           treatment: 'juice only'
@@ -56,7 +57,7 @@ describe('text conversion', () => {
       {
         text: '500 g of minced beef',
         expected: {
-          quantity: '500',
+          quantity: new Real(500),
           unit: 'g',
           ingredient: 'minced beef',
           treatment: undefined
@@ -65,7 +66,7 @@ describe('text conversion', () => {
       {
         text: '500g minced beef',
         expected: {
-          quantity: '500',
+          quantity: new Real(500),
           unit: 'g',
           ingredient: 'minced beef',
           treatment: undefined
@@ -74,7 +75,7 @@ describe('text conversion', () => {
       {
         text: '150 ml fish stock',
         expected: {
-          quantity: '150',
+          quantity: new Real(150),
           unit: 'ml',
           ingredient: 'fish stock',
           treatment: undefined
@@ -83,7 +84,7 @@ describe('text conversion', () => {
       {
         text: '1/4 cup fish sauce',
         expected: {
-          quantity: '1/4',
+          quantity: new Real('1/4'),
           unit: 'cup',
           ingredient: 'fish sauce',
           treatment: undefined
@@ -92,7 +93,7 @@ describe('text conversion', () => {
       {
         text: '1 tbsp lime juice',
         expected: {
-          quantity: '1',
+          quantity: new Real(1),
           unit: 'tbsp',
           ingredient: 'lime juice',
           treatment: undefined
@@ -101,7 +102,7 @@ describe('text conversion', () => {
       {
         text: '2 1/2 red onions, finely chopped',
         expected: {
-          quantity: '2 1/2',
+          quantity: new Real('2 1/2'),
           unit: undefined,
           ingredient: 'red onions',
           treatment: 'finely chopped'
@@ -110,7 +111,7 @@ describe('text conversion', () => {
       {
         text: '1 lime, juice only',
         expected: {
-          quantity: '1',
+          quantity: new Real(1),
           unit: undefined,
           ingredient: 'lime',
           treatment: 'juice only'
@@ -119,7 +120,7 @@ describe('text conversion', () => {
       {
         text: '2.5l milk',
         expected: {
-          quantity: '2.5',
+          quantity: new Real(2.5),
           unit: 'l',
           ingredient: 'milk',
           treatment: undefined
