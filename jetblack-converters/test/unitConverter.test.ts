@@ -154,7 +154,9 @@ describe('converter', () => {
     const ml = flozConverter.convert(10, mlConverter)
     expect(Math.round(ml.valueOf() * 100) / 100).toBe(295.75)
   })
+})
 
+describe('utensils', () => {
   it('Should convert US cup to ml', () => {
     const cupConverter = REPOSITORY.find({
       authority: 'US',
@@ -175,6 +177,17 @@ describe('converter', () => {
 
     const tbsp = cupConverter.convert(1, tbspConverter)
     expect(tbsp.toString()).toBe('16')
+  })
+
+  it('Should convert US tbsp to cups', () => {
+    const tbspConverter = REPOSITORY.find({
+      authority: 'US',
+      name: 'tablespoon'
+    })!
+    const cupConverter = REPOSITORY.find({ authority: 'US', name: 'cup' })!
+
+    const cups = tbspConverter.convert(4, cupConverter)
+    expect(cups.toString()).toBe('1/4')
   })
 
   it('Should convert US tbsp to tsp', () => {
