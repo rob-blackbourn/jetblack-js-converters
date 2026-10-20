@@ -28,7 +28,7 @@ describe('typed public API', () => {
   it('passes a scalar through mass/volume conversions in both directions', () => {
     const grams = REPOSITORY.find({ name: 'gramme', authority: 'si' })!
     const liters = REPOSITORY.find({ name: 'litre', authority: 'si' })!
-    const scalar = new Real(new Fraction(1, 1000))
+    const scalar = new Real(1000) // kg/m3
     expect(REPOSITORY.convert(grams, 1000, liters, scalar)?.valueOf()).toBe(1)
     expect(REPOSITORY.convert(liters, 1, grams, scalar)?.valueOf()).toBe(1000)
     expect(() => REPOSITORY.convert(grams, 1, liters)).toThrow('scalar')

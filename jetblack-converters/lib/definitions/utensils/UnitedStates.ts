@@ -21,7 +21,7 @@ export default function (
       symbol: 'tbsp',
       scalar: new Real(new Fraction(1, 2))
     },
-    { name: 'cup', symbol: 'cup', scalar: new Real(new Fraction(1, 8)) }
+    { name: 'cup', symbol: 'cup', scalar: new Real(8) }
   ]
 
   for (const { name, symbol, scalar } of units) {

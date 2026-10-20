@@ -112,12 +112,12 @@ export default function (repository: ConverterRepository) {
       (value, scalar) => {
         if (!scalar)
           throw new Error('A scalar is required for domain conversion')
-        return value.mul(scalar)
+        return value.div(scalar)
       },
       (value, scalar) => {
         if (!scalar)
           throw new Error('A scalar is required for domain conversion')
-        return value.div(scalar)
+        return value.mul(scalar)
       }
     )
   )
