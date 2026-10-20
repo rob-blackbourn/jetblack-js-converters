@@ -36,3 +36,14 @@ export function parseIngredientLine(text: string): IngredientLine {
     treatment: matches?.groups?.treatment
   }
 }
+
+export function scaleIngredientLine(
+  ingredientLine: IngredientLine,
+  scalar: Real
+): IngredientLine {
+  let { quantity } = ingredientLine
+  if (quantity instanceof Real) {
+    quantity = quantity.mul(scalar)
+  }
+  return { ...ingredientLine, quantity }
+}

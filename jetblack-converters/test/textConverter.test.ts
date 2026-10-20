@@ -1,5 +1,9 @@
 import { Real, Fraction } from '../lib'
-import { IngredientLine, parseIngredientLine } from '../lib/textConverter'
+import {
+  IngredientLine,
+  parseIngredientLine,
+  scaleIngredientLine
+} from '../lib/textConverter'
 
 type IngredientLineFixture = {
   text: string
@@ -141,5 +145,14 @@ describe('text conversion', () => {
       const actual = parseIngredientLine(text)
       expect(actual).toEqual(expected)
     }
+  })
+
+  it('Should scale ingredient', () => {
+    expect(
+      scaleIngredientLine(
+        { quantity: new Real(6) },
+        new Real(new Fraction(1, 3))
+      ).quantity?.toString()
+    ).toBe('2')
   })
 })
