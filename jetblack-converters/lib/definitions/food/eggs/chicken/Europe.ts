@@ -1,5 +1,6 @@
 import type { ConverterRepository } from '../../../../index'
 import { Real, UnitConverter } from '../../../../index'
+import { Unit } from '../../../types'
 
 export default function (
   repository: ConverterRepository,
@@ -14,14 +15,38 @@ export default function (
     name: 'gramme'
   })
 
-  const units = [
-    { name: 'very large', symbol: 'XL', scalar: new Real(73) },
-    { name: 'large', symbol: 'L', scalar: new Real(68) },
-    { name: 'medium', symbol: 'M', scalar: new Real(58) },
-    { name: 'small', symbol: 'S', scalar: new Real(53) }
+  const units: Unit[] = [
+    {
+      name: 'small',
+      symbol: 'S',
+      scalar: new Real(53),
+      ordinal: 0,
+      isMajor: true
+    },
+    {
+      name: 'medium',
+      symbol: 'M',
+      scalar: new Real(58),
+      ordinal: 1,
+      isMajor: true
+    },
+    {
+      name: 'large',
+      symbol: 'L',
+      scalar: new Real(68),
+      ordinal: 2,
+      isMajor: true
+    },
+    {
+      name: 'very large',
+      symbol: 'XL',
+      scalar: new Real(73),
+      ordinal: 3,
+      isMajor: true
+    }
   ]
 
-  for (const { name, symbol, scalar } of units) {
+  for (const { name, symbol, scalar, ordinal, isMajor } of units) {
     repository.add(
       new UnitConverter(
         domain,
@@ -29,6 +54,8 @@ export default function (
         authority,
         symbol,
         name,
+        ordinal,
+        isMajor,
         grammeConverter,
         value => value.mul(scalar),
         value => value.div(scalar)

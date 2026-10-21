@@ -9,36 +9,40 @@ function createSiConverters(
     symbol: string,
     name: string,
     isMultiplier: boolean,
-    scalar: Real
+    scalar: Real,
+    ordinal: number,
+    isMajor: boolean
   ) {
     return {
       symbol: symbol,
       name: name,
       isMultiplier: isMultiplier,
-      scalar: scalar
+      scalar: scalar,
+      ordinal: ordinal,
+      isMajor: isMajor
     }
   }
   const prefixes = [
-    createPrefix('y', 'yocto', false, new Real(Math.pow(10, 24))),
-    createPrefix('z', 'zepto', false, new Real(Math.pow(10, 21))),
-    createPrefix('a', 'atto', false, new Real(Math.pow(10, 18))),
-    createPrefix('f', 'femto', false, new Real(Math.pow(10, 15))),
-    createPrefix('p', 'pico', false, new Real(Math.pow(10, 12))),
-    createPrefix('n', 'nano', false, new Real(Math.pow(10, 9))),
-    createPrefix('\u00b5', 'micro', false, new Real(Math.pow(10, 6))),
-    createPrefix('m', 'milli', false, new Real(Math.pow(10, 3))),
-    createPrefix('c', 'centi', false, new Real(Math.pow(10, 2))),
-    createPrefix('d', 'deci', false, new Real(Math.pow(10, 1))),
-    createPrefix('da', 'deca', true, new Real(Math.pow(10, 1))),
-    createPrefix('h', 'hecto', true, new Real(Math.pow(10, 2))),
-    createPrefix('k', 'kilo', true, new Real(Math.pow(10, 3))),
-    createPrefix('M', 'mega', true, new Real(Math.pow(10, 6))),
-    createPrefix('G', 'giga', true, new Real(Math.pow(10, 9))),
-    createPrefix('T', 'tera', true, new Real(Math.pow(10, 12))),
-    createPrefix('P', 'peta', true, new Real(Math.pow(10, 15))),
-    createPrefix('E', 'exa', true, new Real(Math.pow(10, 18))),
-    createPrefix('Z', 'zetta', true, new Real(Math.pow(10, 21))),
-    createPrefix('Y', 'yotta', true, new Real(Math.pow(10, 24)))
+    createPrefix('y', 'yocto', false, new Real(Math.pow(10, 24)), -10, true),
+    createPrefix('z', 'zepto', false, new Real(Math.pow(10, 21)), -9, true),
+    createPrefix('a', 'atto', false, new Real(Math.pow(10, 18)), -8, true),
+    createPrefix('f', 'femto', false, new Real(Math.pow(10, 15)), -7, true),
+    createPrefix('p', 'pico', false, new Real(Math.pow(10, 12)), -6, true),
+    createPrefix('n', 'nano', false, new Real(Math.pow(10, 9)), -5, true),
+    createPrefix('\u00b5', 'micro', false, new Real(Math.pow(10, 6)), -4, true),
+    createPrefix('m', 'milli', false, new Real(Math.pow(10, 3)), -3, true),
+    createPrefix('c', 'centi', false, new Real(Math.pow(10, 2)), -2, true),
+    createPrefix('d', 'deci', false, new Real(Math.pow(10, 1)), -1, false),
+    createPrefix('da', 'deca', true, new Real(Math.pow(10, 1)), 1, false),
+    createPrefix('h', 'hecto', true, new Real(Math.pow(10, 2)), 1, false),
+    createPrefix('k', 'kilo', true, new Real(Math.pow(10, 3)), 1, true),
+    createPrefix('M', 'mega', true, new Real(Math.pow(10, 6)), 1, true),
+    createPrefix('G', 'giga', true, new Real(Math.pow(10, 9)), 1, true),
+    createPrefix('T', 'tera', true, new Real(Math.pow(10, 12)), 1, true),
+    createPrefix('P', 'peta', true, new Real(Math.pow(10, 15)), 1, true),
+    createPrefix('E', 'exa', true, new Real(Math.pow(10, 18)), 1, true),
+    createPrefix('Z', 'zetta', true, new Real(Math.pow(10, 21)), 1, true),
+    createPrefix('Y', 'yotta', true, new Real(Math.pow(10, 24)), 1, true)
   ]
 
   prefixes.map(prefix => {
@@ -49,6 +53,8 @@ function createSiConverters(
         targetConverter.authority,
         prefix.symbol + targetConverter.symbol,
         prefix.name + targetConverter.name,
+        targetConverter.ordinal,
+        targetConverter.isMajor,
         targetConverter,
         prefix.isMultiplier
           ? value => value.mul(prefix.scalar)
@@ -63,12 +69,34 @@ function createSiConverters(
 
 export default function (repository: ConverterRepository) {
   const meterConverter = repository.add(
-    new UnitConverter('length', 'metric', 'si', 'm', 'meter', null, null, null)
+    new UnitConverter(
+      'length',
+      'metric',
+      'si',
+      'm',
+      'meter',
+      0,
+      true,
+      null,
+      null,
+      null
+    )
   )
   createSiConverters(repository, meterConverter)
 
   const grammeConverter = repository.add(
-    new UnitConverter('mass', 'metric', 'si', 'g', 'gramme', null, null, null)
+    new UnitConverter(
+      'mass',
+      'metric',
+      'si',
+      'g',
+      'gramme',
+      0,
+      true,
+      null,
+      null,
+      null
+    )
   )
   createSiConverters(repository, grammeConverter)
 
@@ -79,6 +107,8 @@ export default function (repository: ConverterRepository) {
       'si',
       's',
       'second',
+      0,
+      true,
       null,
       null,
       null
@@ -87,7 +117,18 @@ export default function (repository: ConverterRepository) {
   createSiConverters(repository, secondConverter)
 
   const litreConverter = repository.add(
-    new UnitConverter('volume', 'metric', 'si', 'l', 'litre', null, null, null)
+    new UnitConverter(
+      'volume',
+      'metric',
+      'si',
+      'l',
+      'litre',
+      0,
+      true,
+      null,
+      null,
+      null
+    )
   )
   createSiConverters(repository, litreConverter)
 
@@ -98,6 +139,8 @@ export default function (repository: ConverterRepository) {
       'si',
       'K',
       'Kelvin',
+      -1,
+      false,
       null,
       null,
       null

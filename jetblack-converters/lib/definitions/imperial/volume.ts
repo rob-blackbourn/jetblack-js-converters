@@ -1,5 +1,6 @@
 import type { ConverterRepository } from '../../index'
 import { Fraction, Real, UnitConverter } from '../../index'
+import { Unit } from '../types'
 
 export default function (
   repository: ConverterRepository,
@@ -17,35 +18,67 @@ export default function (
       authority,
       'pt',
       'pint',
+      0,
+      true,
       litreConverter,
       pint => pint.mul(litreScalar),
       litre => litre.div(litreScalar)
     )
   )
 
-  const units = [
-    { name: 'minim', symbol: 'min', scalar: new Real(new Fraction(1, 9600)) },
+  const units: Unit[] = [
+    {
+      name: 'minim',
+      symbol: 'min',
+      scalar: new Real(new Fraction(1, 9600)),
+      ordinal: -5,
+      isMajor: false
+    },
     {
       name: 'fluid scruple',
       symbol: 'fl scruple',
-      scalar: new Real(new Fraction(1, 480))
+      scalar: new Real(new Fraction(1, 480)),
+      ordinal: -4,
+      isMajor: false
     },
     {
       name: 'fluid drachm',
       symbol: 'fl dr',
-      scalar: new Real(new Fraction(1, 160))
+      scalar: new Real(new Fraction(1, 160)),
+      ordinal: -3,
+      isMajor: false
     },
     {
       name: 'fluid ounce',
       symbol: 'fl oz',
-      scalar: new Real(new Fraction(1, 20))
+      scalar: new Real(new Fraction(1, 20)),
+      ordinal: -2,
+      isMajor: true
     },
-    { name: 'gill', symbol: 'gl', scalar: new Real(new Fraction(1, 4)) },
-    { name: 'quart', symbol: 'qt', scalar: new Real(2) },
-    { name: 'gallon', symbol: 'gal', scalar: new Real(8) }
+    {
+      name: 'gill',
+      symbol: 'gl',
+      scalar: new Real(new Fraction(1, 4)),
+      ordinal: -1,
+      isMajor: false
+    },
+    {
+      name: 'quart',
+      symbol: 'qt',
+      scalar: new Real(2),
+      ordinal: 1,
+      isMajor: true
+    },
+    {
+      name: 'gallon',
+      symbol: 'gal',
+      scalar: new Real(8),
+      ordinal: 2,
+      isMajor: true
+    }
   ]
 
-  for (const { name, symbol, scalar } of units) {
+  for (const { name, symbol, scalar, ordinal, isMajor } of units) {
     repository.add(
       new UnitConverter(
         domain,
@@ -53,6 +86,8 @@ export default function (
         authority,
         symbol,
         name,
+        ordinal,
+        isMajor,
         pintConverter,
         value => value.mul(scalar),
         value => value.div(scalar)

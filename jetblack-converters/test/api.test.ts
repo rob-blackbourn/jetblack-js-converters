@@ -19,8 +19,8 @@ describe('typed public API', () => {
 
   it('returns undefined for missing units and unregistered domain bridges', () => {
     expect(REPOSITORY.find({ name: 'unknown' })).toBeUndefined()
-    const source = new UnitConverter('one', '', '', '', 'source')
-    const target = new UnitConverter('two', '', '', '', 'target')
+    const source = new UnitConverter('one', '', '', '', 'source', 0, true)
+    const target = new UnitConverter('two', '', '', '', 'target', 1, true)
     expect(new ConverterRepository().convert(source, 1, target)).toBeUndefined()
     expect(() => source.convert(1, target)).toThrow('No conversion path')
   })
