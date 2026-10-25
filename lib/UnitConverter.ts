@@ -107,19 +107,7 @@ export class UnitConverter {
     return value
   }
 
-  simplify(
-    value: RealInput,
-    lowerThreshold: RealInput,
-    upperThreshold: RealInput
-  ): Real {
-    value = Real.toReal(value)
-    lowerThreshold = Real.toReal(lowerThreshold)
-    upperThreshold = Real.toReal(upperThreshold)
-
-    return value
-  }
-
-  static prepareConverters(
+  private static prepareConverters(
     fromConverter: UnitConverter | null | undefined,
     toConverter: UnitConverter | null | undefined
   ): { from: UnitConverter[]; to: UnitConverter[] } | null {

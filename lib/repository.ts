@@ -1,7 +1,7 @@
 import { UnitConverter } from './UnitConverter'
 import { DomainConverter } from './DomainConverter'
 import type { RealInput } from './numbers/real'
-import type { Real } from './numbers'
+import { Real } from './numbers'
 
 export interface ConverterCriteria {
   domain?: string
@@ -117,7 +117,7 @@ export class ConverterRepository {
     return possibles
   }
 
-  filterPossibles(
+  private filterPossibles(
     possibles: UnitConverter[],
     preferredSystem?: string,
     preferredAuthority?: string
@@ -171,7 +171,7 @@ export class ConverterRepository {
     }
   }
 
-  static filter(
+  private static filter(
     candidates: UnitConverter[],
     criterium: string | undefined,
     getter: (converter: UnitConverter) => string
@@ -187,6 +187,69 @@ export class ConverterRepository {
     } else {
       return candidates
     }
+  }
+
+  private simplifyInDirection(
+    converter: UnitConverter,
+    value: Real,
+    distanceFromOne: Real,
+    converters: UnitConverter[]
+  ): [UnitConverter, Real] {
+    while (converters.length > 0) {
+      const nextConverter = converters.pop()!
+
+      const nextValue = converter.convert(value, nextConverter)
+      const nextDistanceFromOne = nextValue.sub(1)
+      if (nextDistanceFromOne.abs() > distanceFromOne.abs()) {
+        return [converter, value]
+      }
+      distanceFromOne = nextDistanceFromOne
+      converter = nextConverter
+      value = nextValue
+    }
+
+    return [converter, value]
+  }
+
+  simplify(
+    converter: UnitConverter,
+    value: RealInput,
+    majorOnly: boolean = true
+  ): [UnitConverter, Real] {
+    value = Real.toReal(value)
+
+    const criteria: ConverterCriteria = {
+      domain: converter.domain,
+      system: converter.system,
+      authority: converter.authority
+    }
+    let converters = this.findAll(criteria)
+
+    const distanceFromOne = value.sub(1)
+
+    if (distanceFromOne.lt(1)) {
+      converters = converters
+        .filter(c => c.ordinal < converter.ordinal && (c.isMajor || !majorOnly))
+        .sort((a, b) => a.ordinal - b.ordinal)
+      return this.simplifyInDirection(
+        converter,
+        value,
+        distanceFromOne,
+        converters
+      )
+    } else if (distanceFromOne.gt(1)) {
+      converters = converters
+        .filter(c => c.ordinal > converter.ordinal && (c.isMajor || !majorOnly))
+        .sort((a, b) => b.ordinal - a.ordinal)
+      return this.simplifyInDirection(
+        converter,
+        value,
+        distanceFromOne,
+        converters
+      )
+    }
+
+    return [converter, value]
   }
 }
 

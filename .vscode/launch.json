@@ -5,12 +5,11 @@
       "type": "node",
       "request": "launch",
       "name": "Debug all Jest tests",
-      "program": "${workspaceFolder}/jetblack-converters/node_modules/jest/bin/jest.js",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest.js",
       "args": [
         "--runInBand",
         "--watchAll=false"
       ],
-      "cwd": "${workspaceFolder}/jetblack-converters",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "skipFiles": [
@@ -22,14 +21,13 @@
       "type": "node",
       "request": "launch",
       "name": "Debug current Jest test file",
-      "program": "${workspaceFolder}/jetblack-converters/node_modules/jest/bin/jest.js",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest.js",
       "args": [
         "--runInBand",
         "--watchAll=false",
         "--runTestsByPath",
         "${file}"
       ],
-      "cwd": "${workspaceFolder}/jetblack-converters",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "skipFiles": [

@@ -1,11 +1,19 @@
 {
-  "name": "jetblack-converters",
+  "name": "@jetblack/converters",
   "version": "0.0.0",
-  "description": "Unit conversion with exact fraction arithmetic for Node.js and modern browsers",
+  "description": "Unit conversion with float or fraction arithmetic for Node.js and modern browsers",
   "main": "./dist/index.cjs",
   "author": {
-    "name": "rblackbourn",
+    "name": "Rob Blackbourn",
     "email": "rob.blackbourn@googlemail.com"
+  },
+  "module": "./dist/index.mjs",
+  "types": "./dist/types/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && esbuild lib/index.ts --bundle --platform=neutral --target=es2020 --format=esm --outfile=dist/index.mjs --sourcemap && esbuild lib/index.ts --bundle --platform=node --target=es2020 --format=cjs --outfile=dist/index.cjs --sourcemap",
+    "typecheck": "tsc --noEmit",
+    "test": "jest --runInBand",
+    "prepack": "npm run build"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
@@ -15,8 +23,6 @@
     "ts-jest": "^29.4.14",
     "typescript": "^5.9.3"
   },
-  "module": "./dist/index.mjs",
-  "types": "./dist/types/index.d.ts",
   "files": [
     "dist"
   ],
@@ -26,12 +32,6 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     }
-  },
-  "scripts": {
-    "build": "tsc -p tsconfig.build.json && esbuild lib/index.ts --bundle --platform=neutral --target=es2020 --format=esm --outfile=dist/index.mjs --sourcemap && esbuild lib/index.ts --bundle --platform=node --target=es2020 --format=cjs --outfile=dist/index.cjs --sourcemap",
-    "typecheck": "tsc --noEmit",
-    "test": "jest --runInBand",
-    "prepack": "npm run build"
   },
   "engines": {
     "node": ">=18"

@@ -27,7 +27,7 @@ export default function (
       symbol: 'tsp',
       scalar: new Real(new Fraction(1, 6)),
       ordinal: 1,
-      isMajor: false
+      isMajor: true
     },
     {
       name: 'tablespoon',
