@@ -110,4 +110,12 @@ export class Real {
 
     return new Real(this.valueOf() / rhs.valueOf())
   }
+
+  abs(): Real {
+    return new Real(
+      this.value instanceof Fraction
+        ? this.value.abs()
+        : Math.abs(this.valueOf())
+    )
+  }
 }

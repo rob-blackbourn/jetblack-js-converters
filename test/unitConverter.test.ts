@@ -201,3 +201,24 @@ describe('utensils', () => {
     expect(tbsp.toString()).toBe('3')
   })
 })
+
+describe('simplify', () => {
+  it('Should simplify cups to spoons', () => {
+    const cupConverter = REPOSITORY.find({ authority: 'US', name: 'cup' })!
+    const cups = new Real(new Fraction(1, 16))
+    const [nextConverter, nextValue] = REPOSITORY.simplify(cupConverter, cups)
+    expect(nextConverter.name).toBe('tablespoon')
+    expect(nextValue.valueOf()).toBe(1)
+  })
+
+  it('Should simplify spoons to cups', () => {
+    const tbspConverter = REPOSITORY.find({
+      authority: 'US',
+      name: 'tablespoon'
+    })!
+    const tbsp = new Real(16)
+    const [nextConverter, nextValue] = REPOSITORY.simplify(tbspConverter, tbsp)
+    expect(nextConverter.name).toBe('cup')
+    expect(nextValue.valueOf()).toBe(1)
+  })
+})
