@@ -189,7 +189,7 @@ export class ConverterRepository {
     }
   }
 
-  simplifyInDirection(
+  private simplifyInDirection(
     converter: UnitConverter,
     value: Real,
     distanceFromOne: Real,
@@ -211,7 +211,11 @@ export class ConverterRepository {
     return [converter, value]
   }
 
-  simplify(converter: UnitConverter, value: RealInput): [UnitConverter, Real] {
+  simplify(
+    converter: UnitConverter,
+    value: RealInput,
+    majorOnly: boolean = true
+  ): [UnitConverter, Real] {
     value = Real.toReal(value)
 
     const criteria: ConverterCriteria = {
@@ -225,7 +229,7 @@ export class ConverterRepository {
 
     if (distanceFromOne.lt(1)) {
       converters = converters
-        .filter(c => c.ordinal < converter.ordinal)
+        .filter(c => c.ordinal < converter.ordinal && (c.isMajor || !majorOnly))
         .sort((a, b) => a.ordinal - b.ordinal)
       return this.simplifyInDirection(
         converter,
@@ -235,7 +239,7 @@ export class ConverterRepository {
       )
     } else if (distanceFromOne.gt(1)) {
       converters = converters
-        .filter(c => c.ordinal > converter.ordinal)
+        .filter(c => c.ordinal > converter.ordinal && (c.isMajor || !majorOnly))
         .sort((a, b) => b.ordinal - a.ordinal)
       return this.simplifyInDirection(
         converter,

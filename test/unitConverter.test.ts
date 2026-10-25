@@ -203,7 +203,7 @@ describe('utensils', () => {
 })
 
 describe('simplify', () => {
-  it('Should simplify cups to spoons', () => {
+  it('Should simplify cups to tbsp', () => {
     const cupConverter = REPOSITORY.find({ authority: 'US', name: 'cup' })!
     const cups = new Real(new Fraction(1, 16))
     const [nextConverter, nextValue] = REPOSITORY.simplify(cupConverter, cups)
@@ -211,13 +211,32 @@ describe('simplify', () => {
     expect(nextValue.valueOf()).toBe(1)
   })
 
-  it('Should simplify spoons to cups', () => {
+  it('Should simplify tbsp to cups', () => {
     const tbspConverter = REPOSITORY.find({
       authority: 'US',
       name: 'tablespoon'
     })!
     const tbsp = new Real(16)
     const [nextConverter, nextValue] = REPOSITORY.simplify(tbspConverter, tbsp)
+    expect(nextConverter.name).toBe('cup')
+    expect(nextValue.valueOf()).toBe(1)
+  })
+
+  it('Should simplify cups to tbsp', () => {
+    const cupConverter = REPOSITORY.find({ authority: 'US', name: 'cup' })!
+    const cups = new Real(new Fraction(1, 48))
+    const [nextConverter, nextValue] = REPOSITORY.simplify(cupConverter, cups)
+    expect(nextConverter.name).toBe('teaspoon')
+    expect(nextValue.valueOf()).toBe(1)
+  })
+
+  it('Should simplify tsp to cups', () => {
+    const tspConverter = REPOSITORY.find({
+      authority: 'US',
+      name: 'teaspoon'
+    })!
+    const tbsp = new Real(48)
+    const [nextConverter, nextValue] = REPOSITORY.simplify(tspConverter, tbsp)
     expect(nextConverter.name).toBe('cup')
     expect(nextValue.valueOf()).toBe(1)
   })
