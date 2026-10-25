@@ -1,23 +1,30 @@
 import { Fraction } from './fraction'
 
-export type RealInput = number | string | Fraction | Real
+export type RealInput = number | Fraction | Real
 export type RealOperand = number | Fraction | Real
 
 export class Real {
   value: number | Fraction
 
-  constructor(value: RealInput) {
+  constructor(value: number | Fraction | Real) {
     if (value instanceof Real) {
       this.value = value.value
     } else if (typeof value === 'number') {
       this.value = Number.isInteger(value) ? new Fraction(value, 1) : value
     } else if (value instanceof Fraction) {
       this.value = value.isNaN() ? Number.NaN : value
-    } else if (/^\s*[+-]?\d*\.\d+([Ee][+-]?\d+)?\s*$/.test(value)) {
-      this.value = parseFloat(value)
     } else {
-      const fraction = Fraction.parse(value)
-      this.value = fraction.isNaN() ? Number.NaN : fraction
+      throw Error('Invalid real')
+    }
+  }
+
+  static parse(text: string): Real {
+    if (/^\s*[+-]?\d*\.\d+([Ee][+-]?\d+)?\s*$/.test(text)) {
+      const value = parseFloat(text)
+      return new Real(Number.isInteger(value) ? new Fraction(value, 1) : value)
+    } else {
+      const value = Fraction.parse(text)
+      return new Real(value.isNaN() ? Number.NaN : value)
     }
   }
 

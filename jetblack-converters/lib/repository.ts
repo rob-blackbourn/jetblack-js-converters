@@ -45,25 +45,12 @@ export class DomainConverterRepository {
 }
 
 export class ConverterRepository {
-  private _defaultClassification?: string
-  private _defaultAuthority?: string
   private _converters: UnitConverter[]
   private _domainConverters: DomainConverterRepository
 
-  constructor(defaultClassification?: string, defaultAuthority?: string) {
-    this._defaultClassification = defaultClassification
-    this._defaultAuthority = defaultAuthority
-
+  constructor() {
     this._converters = []
     this._domainConverters = new DomainConverterRepository()
-  }
-
-  get defaultClassification() {
-    return this._defaultClassification
-  }
-
-  get defaultAuthority() {
-    return this._defaultAuthority
   }
 
   get converters() {
@@ -79,35 +66,21 @@ export class ConverterRepository {
     return converter
   }
 
-  find(criteria: ConverterCriteria): UnitConverter | undefined {
-    let possibles = this.findAll(criteria)
+  find(
+    criteria: ConverterCriteria,
+    preferredSystem?: string,
+    preferredAuthority?: string
+  ): UnitConverter | undefined {
+    let possibles = this.findAll(criteria, preferredSystem, preferredAuthority)
 
-    if (possibles.length > 1) {
-      const filtered = ConverterRepository.filter(
-        possibles,
-        this._defaultClassification,
-        converter => converter.system
-      )
-      if (filtered.length > 0) {
-        possibles = filtered
-      }
-    }
-
-    if (possibles.length > 1) {
-      const filtered = ConverterRepository.filter(
-        possibles,
-        this._defaultAuthority,
-        converter => converter.authority
-      )
-      if (filtered.length > 0) {
-        possibles = filtered
-      }
-    }
-
-    return possibles[0]
+    return possibles.length > 0 ? possibles[0] : undefined
   }
 
-  findAll(criteria: ConverterCriteria) {
+  findAll(
+    criteria: ConverterCriteria,
+    preferredSystem?: string,
+    preferredAuthority?: string
+  ): UnitConverter[] {
     let possibles = this._converters
     possibles = ConverterRepository.filter(
       possibles,
@@ -134,6 +107,42 @@ export class ConverterRepository {
       criteria.name,
       converter => converter.name
     )
+
+    possibles = this.filterPossibles(
+      possibles,
+      preferredSystem,
+      preferredAuthority
+    )
+
+    return possibles
+  }
+
+  filterPossibles(
+    possibles: UnitConverter[],
+    preferredSystem?: string,
+    preferredAuthority?: string
+  ): UnitConverter[] {
+    if (possibles.length > 1) {
+      const filtered = ConverterRepository.filter(
+        possibles,
+        preferredSystem,
+        converter => converter.system
+      )
+      if (filtered.length > 0) {
+        possibles = filtered
+      }
+    }
+
+    if (possibles.length > 1) {
+      const filtered = ConverterRepository.filter(
+        possibles,
+        preferredAuthority,
+        converter => converter.authority
+      )
+      if (filtered.length > 0) {
+        possibles = filtered
+      }
+    }
 
     return possibles
   }

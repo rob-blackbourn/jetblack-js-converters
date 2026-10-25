@@ -144,31 +144,60 @@ describe('converter', () => {
     expect(Math.round(millilitres.valueOf() * 10) / 10).toBe(284.1)
   })
 
-  it('Should convert US Cups to grammes', () => {
-    const cupConverter = REPOSITORY.find({ name: 'cup', authority: 'US' })!
-    const grammeConverter = REPOSITORY.find({
-      name: 'gramme',
-      authority: 'si'
+  it('Should convert US fl oz to ml', () => {
+    const flozConverter = REPOSITORY.find({
+      authority: 'US',
+      name: 'fluid ounce'
     })!
-    const density = new Real(Fraction.fromFloat(0.875))
+    const mlConverter = REPOSITORY.find({ name: 'millilitre' })!
 
-    const cups = REPOSITORY.convert(
-      cupConverter,
-      1000,
-      grammeConverter,
-      density
-    )
-    expect(cups).toBeDefined()
-    expect(cups?.asFraction().roundTo([1, 2, 3, 4, 5, 6, 8])?.toString()).toBe(
-      '4 1/4'
-    )
+    const ml = flozConverter.convert(10, mlConverter)
+    expect(Math.round(ml.valueOf() * 100) / 100).toBe(295.75)
+  })
+})
 
-    const grammes = REPOSITORY.convert(
-      grammeConverter,
-      cups!,
-      cupConverter,
-      density
-    )
-    expect(grammes?.valueOf()).toBe(1000)
+describe('utensils', () => {
+  it('Should convert US cup to ml', () => {
+    const cupConverter = REPOSITORY.find({
+      authority: 'US',
+      name: 'cup'
+    })!
+    const mlConverter = REPOSITORY.find({ name: 'millilitre' })!
+
+    const ml = cupConverter.convert(10, mlConverter)
+    expect(Math.round(ml.valueOf() * 100) / 100).toBe(2366)
+  })
+
+  it('Should convert US cups to tbsp', () => {
+    const cupConverter = REPOSITORY.find({ authority: 'US', name: 'cup' })!
+    const tbspConverter = REPOSITORY.find({
+      authority: 'US',
+      name: 'tablespoon'
+    })!
+
+    const tbsp = cupConverter.convert(1, tbspConverter)
+    expect(tbsp.toString()).toBe('16')
+  })
+
+  it('Should convert US tbsp to cups', () => {
+    const tbspConverter = REPOSITORY.find({
+      authority: 'US',
+      name: 'tablespoon'
+    })!
+    const cupConverter = REPOSITORY.find({ authority: 'US', name: 'cup' })!
+
+    const cups = tbspConverter.convert(4, cupConverter)
+    expect(cups.toString()).toBe('1/4')
+  })
+
+  it('Should convert US tbsp to tsp', () => {
+    const tbspConverter = REPOSITORY.find({
+      authority: 'US',
+      name: 'tablespoon'
+    })!
+    const tspConverter = REPOSITORY.find({ authority: 'US', name: 'teaspoon' })!
+
+    const tbsp = tbspConverter.convert(1, tspConverter)
+    expect(tbsp.toString()).toBe('3')
   })
 })

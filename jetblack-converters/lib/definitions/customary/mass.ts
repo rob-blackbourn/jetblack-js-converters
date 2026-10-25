@@ -1,5 +1,6 @@
 import type { ConverterRepository } from '../../index'
 import { Fraction, Real, UnitConverter } from '../../index'
+import type { Unit } from '../types'
 
 export default function (
   repository: ConverterRepository,
@@ -17,23 +18,67 @@ export default function (
       authority,
       'lb',
       'pound',
+      0,
+      true,
       grammeConverter,
       value => value.mul(grammeScalar),
       value => value.div(grammeScalar)
     )
   )
 
-  const units = [
-    { name: 'grain', symbol: 'gr', scalar: new Real(new Fraction(1, 7000)) },
-    { name: 'dram', symbol: 'dr', scalar: new Real(new Fraction(1, 256)) },
-    { name: 'ounce', symbol: 'oz', scalar: new Real(new Fraction(1, 16)) },
-    { name: 'stone', symbol: 'st', scalar: new Real(16) },
-    { name: 'quarter', symbol: 'qtr', scalar: new Real(28) },
-    { name: 'hundredweight', symbol: 'cwt', scalar: new Real(112) },
-    { name: 'ton', symbol: 'tn', scalar: new Real(2240) }
+  const units: Unit[] = [
+    {
+      name: 'grain',
+      symbol: 'gr',
+      scalar: new Real(new Fraction(1, 7000)),
+      ordinal: -3,
+      isMajor: true
+    },
+    {
+      name: 'dram',
+      symbol: 'dr',
+      scalar: new Real(new Fraction(1, 256)),
+      ordinal: -2,
+      isMajor: true
+    },
+    {
+      name: 'ounce',
+      symbol: 'oz',
+      scalar: new Real(new Fraction(1, 16)),
+      ordinal: -1,
+      isMajor: true
+    },
+    {
+      name: 'stone',
+      symbol: 'st',
+      scalar: new Real(16),
+      ordinal: 1,
+      isMajor: true
+    },
+    {
+      name: 'quarter',
+      symbol: 'qtr',
+      scalar: new Real(28),
+      ordinal: 2,
+      isMajor: true
+    },
+    {
+      name: 'hundredweight',
+      symbol: 'cwt',
+      scalar: new Real(112),
+      ordinal: 3,
+      isMajor: true
+    },
+    {
+      name: 'ton',
+      symbol: 'tn',
+      scalar: new Real(2240),
+      ordinal: 4,
+      isMajor: true
+    }
   ]
 
-  for (const { name, symbol, scalar } of units) {
+  for (const { name, symbol, scalar, ordinal, isMajor } of units) {
     repository.add(
       new UnitConverter(
         domain,
@@ -41,6 +86,8 @@ export default function (
         authority,
         symbol,
         name,
+        ordinal,
+        isMajor,
         poundConverter,
         value => value.mul(scalar),
         value => value.div(scalar)

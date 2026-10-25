@@ -8,6 +8,8 @@ export class UnitConverter {
   private _authority: string
   private _symbol: string
   private _name: string
+  private _ordinal: number
+  private _isMajor: boolean
   private _targetConverter: UnitConverter | null | undefined
   private _toTarget: Conversion | null
   private _fromTarget: Conversion | null
@@ -18,6 +20,8 @@ export class UnitConverter {
     authority: string,
     symbol: string,
     name: string,
+    ordinal: number,
+    isMajor: boolean,
     targetConverter: UnitConverter | null | undefined = null,
     toTarget: Conversion | null = null,
     fromTarget: Conversion | null = null
@@ -27,6 +31,8 @@ export class UnitConverter {
     this._authority = authority
     this._symbol = symbol
     this._name = name
+    this._ordinal = ordinal
+    this._isMajor = isMajor
     this._targetConverter = targetConverter
     this._toTarget = toTarget
     this._fromTarget = fromTarget
@@ -52,6 +58,14 @@ export class UnitConverter {
     return this._name
   }
 
+  get ordinal() {
+    return this._ordinal
+  }
+
+  get isMajor() {
+    return this._isMajor
+  }
+
   get targetConverter() {
     return this._targetConverter
   }
@@ -65,18 +79,7 @@ export class UnitConverter {
   }
 
   toString() {
-    return (
-      'domain=' +
-      this._domain +
-      ',system=' +
-      this._system +
-      ',authority=' +
-      this._authority +
-      ',symbol=' +
-      this._symbol +
-      ',name=' +
-      this._name
-    )
+    return `domain: ${this.domain}, system: ${this.system}, authority: ${this.authority}, symbol: ${this.symbol}, name: ${this.name}`
   }
 
   convert(input: RealInput, to: UnitConverter): Real {
@@ -100,6 +103,18 @@ export class UnitConverter {
         value = converter.fromTarget(value)
       }
     }
+
+    return value
+  }
+
+  simplify(
+    value: RealInput,
+    lowerThreshold: RealInput,
+    upperThreshold: RealInput
+  ): Real {
+    value = Real.toReal(value)
+    lowerThreshold = Real.toReal(lowerThreshold)
+    upperThreshold = Real.toReal(upperThreshold)
 
     return value
   }

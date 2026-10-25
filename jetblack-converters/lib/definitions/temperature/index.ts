@@ -12,6 +12,8 @@ export default function (repository: ConverterRepository) {
       'si',
       '\u00b0C',
       'Celsius',
+      1,
+      true,
       kelvinConverter,
       celsius => celsius.add(celsiusOffset),
       kelvin => kelvin.sub(celsiusOffset)
@@ -27,6 +29,8 @@ export default function (repository: ConverterRepository) {
       'UK',
       '\u00b0F',
       'Fahrenheit',
+      0,
+      true,
       celsiusConverter,
       fahrenheit => fahrenheit.sub(fahrenheitOffset).div(fahrenheitScalar),
       celsius => celsius.mul(fahrenheitScalar).add(fahrenheitOffset)
@@ -42,6 +46,8 @@ export default function (repository: ConverterRepository) {
       'UK',
       'GM',
       'Gas Mark',
+      0,
+      true,
       celsiusConverter,
       gasMark => {
         if (gasMark.lt(new Real(new Fraction(3, 8)))) {
