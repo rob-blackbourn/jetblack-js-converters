@@ -5,7 +5,7 @@
       "label": "Build package",
       "type": "npm",
       "script": "build",
-      "path": "jetblack-converters",
+      "path": "${workspaceFolder}",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -18,7 +18,7 @@
       "label": "Typecheck",
       "type": "npm",
       "script": "typecheck",
-      "path": "jetblack-converters",
+      "path": "${workspaceFolder}",
       "problemMatcher": [
         "$tsc"
       ]
@@ -27,7 +27,7 @@
       "label": "Run Jest tests",
       "type": "npm",
       "script": "test",
-      "path": "jetblack-converters",
+      "path": "${workspaceFolder}",
       "group": {
         "kind": "test",
         "isDefault": true
