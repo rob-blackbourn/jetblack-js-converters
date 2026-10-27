@@ -28,6 +28,10 @@ export class ConvertibleValue extends Real {
     return new ConvertibleValue(this.value, domainScalar, this.options)
   }
 
+  prefer(options: ConverterOptions) {
+    return new ConvertibleValue(this, this.domainScalar, options)
+  }
+
   from(unit: UnitConverter | ConverterCriteria, options?: ConverterOptions) {
     const converter = REPOSITORY.toConverter(unit, options ?? this.options)
     return new ConvertibleValueAndUnit(this, converter)
@@ -49,6 +53,13 @@ export class ConvertibleValueAndUnit extends ConvertibleValue {
   of(domainScalar: RealInput) {
     return new ConvertibleValueAndUnit(
       new ConvertibleValue(this, domainScalar, this.options),
+      this.unit
+    )
+  }
+
+  prefer(options: ConverterOptions) {
+    return new ConvertibleValueAndUnit(
+      new ConvertibleValue(this, this.domainScalar, options),
       this.unit
     )
   }

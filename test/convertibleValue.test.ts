@@ -17,4 +17,15 @@ describe('convert', () => {
       '4 4/5'
     )
   })
+
+  test('Should convert grammes to preferred cups', () => {
+    const cups = convert(1000)
+      .from({ name: 'gramme' })
+      .of(880)
+      .prefer({ preferredAuthority: 'US' })
+      .to({ name: 'cup' })
+    expect(cups?.asFraction().roundTo([1, 2, 3, 4, 5, 6, 8])?.toString()).toBe(
+      '4 4/5'
+    )
+  })
 })
