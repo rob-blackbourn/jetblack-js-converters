@@ -12,8 +12,8 @@ export interface ConverterCriteria {
 }
 
 export interface ConverterOptions {
-  preferredSystem?: string
-  preferredAuthority?: string
+  system?: string
+  authority?: string
 }
 
 export class DomainConverterRepository {
@@ -137,7 +137,7 @@ export class ConverterRepository {
     if (possibles.length > 1) {
       const filtered = ConverterRepository.filter(
         possibles,
-        options?.preferredSystem,
+        options?.system,
         converter => converter.system
       )
       if (filtered.length > 0) {
@@ -148,7 +148,7 @@ export class ConverterRepository {
     if (possibles.length > 1) {
       const filtered = ConverterRepository.filter(
         possibles,
-        options?.preferredAuthority,
+        options?.authority,
         converter => converter.authority
       )
       if (filtered.length > 0) {
