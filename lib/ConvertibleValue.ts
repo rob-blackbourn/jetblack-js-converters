@@ -14,6 +14,10 @@ export class ConvertibleValue extends Real {
     this.options = options
   }
 
+  static parse(text: string): Real {
+    return Real.parse(text)
+  }
+
   from(unit: UnitConverter | ConverterCriteria, options?: ConverterOptions) {
     const converter = REPOSITORY.toConverter(unit, options ?? this.options)
     return new ConvertibleValueAndUnit(this, converter)
@@ -22,19 +26,30 @@ export class ConvertibleValue extends Real {
 
 export class ConvertibleValueAndUnit extends Real {
   unit: UnitConverter
+  private options?: ConverterOptions
 
-  constructor(value: number | Fraction | Real, unit: UnitConverter) {
+  constructor(
+    value: number | Fraction | Real,
+    unit: UnitConverter,
+    options?: ConverterOptions
+  ) {
     super(value)
     this.unit = unit
+    this.options = options
   }
 
   toString(): string {
     return `${this.value.toString()} ${this.unit.symbol}`
   }
 
-  to(unit: UnitConverter) {
-    const value = this.unit.convert(this.value, unit)
-    return new ConvertibleValueAndUnit(value, unit)
+  to(unit: UnitConverter | ConverterCriteria, options?: ConverterOptions) {
+    const converter = REPOSITORY.toConverter(unit, options ?? this.options)
+    const value = this.unit.convert(this.value, converter)
+    return new ConvertibleValueAndUnit(
+      value,
+      converter,
+      options ?? this.options
+    )
   }
 }
 
