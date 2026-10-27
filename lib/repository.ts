@@ -11,6 +11,11 @@ export interface ConverterCriteria {
   name?: string
 }
 
+export interface ConverterOptions {
+  system?: string
+  authority?: string
+}
+
 export class DomainConverterRepository {
   private _domainConverters: DomainConverter[]
 
@@ -66,21 +71,36 @@ export class ConverterRepository {
     return converter
   }
 
+  toConverter(
+    criteria: string | ConverterCriteria | UnitConverter,
+    options?: ConverterOptions
+  ): UnitConverter {
+    if (criteria instanceof UnitConverter) {
+      return criteria
+    }
+    const converter = this.find(criteria, options)
+    if (converter === undefined) {
+      throw new Error('Failed to find unit')
+    }
+    return converter
+  }
+
   find(
-    criteria: ConverterCriteria,
-    preferredSystem?: string,
-    preferredAuthority?: string
+    criteria: string | ConverterCriteria,
+    options?: ConverterOptions
   ): UnitConverter | undefined {
-    let possibles = this.findAll(criteria, preferredSystem, preferredAuthority)
+    let possibles = this.findAll(criteria, options ?? {})
 
     return possibles.length > 0 ? possibles[0] : undefined
   }
 
   findAll(
-    criteria: ConverterCriteria,
-    preferredSystem?: string,
-    preferredAuthority?: string
+    criteria: string | ConverterCriteria,
+    options?: ConverterOptions
   ): UnitConverter[] {
+    if (typeof criteria === 'string') {
+      criteria = { symbol: criteria } as ConverterCriteria
+    }
     let possibles = this._converters
     possibles = ConverterRepository.filter(
       possibles,
@@ -108,24 +128,19 @@ export class ConverterRepository {
       converter => converter.name
     )
 
-    possibles = this.filterPossibles(
-      possibles,
-      preferredSystem,
-      preferredAuthority
-    )
+    possibles = this.filterPossibles(possibles, options)
 
     return possibles
   }
 
   private filterPossibles(
     possibles: UnitConverter[],
-    preferredSystem?: string,
-    preferredAuthority?: string
+    options?: ConverterOptions
   ): UnitConverter[] {
     if (possibles.length > 1) {
       const filtered = ConverterRepository.filter(
         possibles,
-        preferredSystem,
+        options?.system,
         converter => converter.system
       )
       if (filtered.length > 0) {
@@ -136,7 +151,7 @@ export class ConverterRepository {
     if (possibles.length > 1) {
       const filtered = ConverterRepository.filter(
         possibles,
-        preferredAuthority,
+        options?.authority,
         converter => converter.authority
       )
       if (filtered.length > 0) {
@@ -214,7 +229,8 @@ export class ConverterRepository {
   simplify(
     converter: UnitConverter,
     value: RealInput,
-    majorOnly: boolean = true
+    majorOnly: boolean = true,
+    options?: ConverterOptions
   ): [UnitConverter, Real] {
     value = Real.toReal(value)
 
@@ -223,7 +239,7 @@ export class ConverterRepository {
       system: converter.system,
       authority: converter.authority
     }
-    let converters = this.findAll(criteria)
+    let converters = this.findAll(criteria, options)
 
     const distanceFromOne = value.sub(1)
 

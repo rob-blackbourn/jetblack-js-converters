@@ -1,7 +1,6 @@
 import { Fraction } from './fraction'
 
 export type RealInput = number | Fraction | Real
-export type RealOperand = number | Fraction | Real
 
 export class Real {
   value: number | Fraction
