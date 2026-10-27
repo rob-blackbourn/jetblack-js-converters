@@ -11,7 +11,7 @@ export {
   convert,
   ConvertibleValue,
   ConvertibleValueAndUnit
-} from './ConvertibleValue'
+} from './fluentConversion'
 
 import { REPOSITORY } from './repository'
 import { defineConverters } from './definitions'
