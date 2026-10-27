@@ -7,15 +7,29 @@ import {
 import { UnitConverter } from './UnitConverter'
 
 export class ConvertibleValue extends Real {
-  private options?: ConverterOptions
+  scalar: Real
+  options?: ConverterOptions
 
-  constructor(value: number | Fraction | Real, options?: ConverterOptions) {
+  constructor(
+    value: number | Fraction | Real,
+    scalar: RealInput = 1,
+    options?: ConverterOptions
+  ) {
     super(value)
+    this.scalar = Real.toReal(scalar)
     this.options = options
   }
 
   static parse(text: string): Real {
     return Real.parse(text)
+  }
+
+  of(domainScalarProvider: () => RealInput) {
+    return new ConvertibleValue(
+      this.value,
+      domainScalarProvider(),
+      this.options
+    )
   }
 
   from(unit: UnitConverter | ConverterCriteria, options?: ConverterOptions) {
@@ -24,38 +38,40 @@ export class ConvertibleValue extends Real {
   }
 }
 
-export class ConvertibleValueAndUnit extends Real {
+export class ConvertibleValueAndUnit extends ConvertibleValue {
   unit: UnitConverter
-  private options?: ConverterOptions
 
-  constructor(
-    value: number | Fraction | Real,
-    unit: UnitConverter,
-    options?: ConverterOptions
-  ) {
-    super(value)
+  constructor(value: ConvertibleValue, unit: UnitConverter) {
+    super(value, value.scalar, value.options)
     this.unit = unit
-    this.options = options
   }
 
   toString(): string {
-    return `${this.value.toString()} ${this.unit.symbol}`
+    return `${this.value.toString()} (${this.scalar}) ${this.unit.symbol}`
   }
 
   to(unit: UnitConverter | ConverterCriteria, options?: ConverterOptions) {
     const converter = REPOSITORY.toConverter(unit, options ?? this.options)
-    const value = this.unit.convert(this.value, converter)
-    return new ConvertibleValueAndUnit(
-      value,
+    const value = REPOSITORY.convert(
+      this.unit,
+      this.value,
       converter,
-      options ?? this.options
+      this.scalar
+    )
+    if (value === undefined) {
+      throw new Error('Conversion failed')
+    }
+    return new ConvertibleValueAndUnit(
+      new ConvertibleValue(value, 1, this.options),
+      converter
     )
   }
 }
 
 export function convert(
-  value: number | Fraction | Real,
+  value: RealInput,
+  scalar: RealInput = 1,
   options?: ConverterOptions
 ): ConvertibleValue {
-  return new ConvertibleValue(value, options)
+  return new ConvertibleValue(value, scalar, options)
 }
