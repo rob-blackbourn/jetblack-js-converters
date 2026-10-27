@@ -7,16 +7,16 @@ import {
 import { UnitConverter } from './UnitConverter'
 
 export class ConvertibleValue extends Real {
-  scalar: Real
+  domainScalar: Real
   options?: ConverterOptions
 
   constructor(
     value: number | Fraction | Real,
-    scalar: RealInput = 1,
+    domainScalar: RealInput = 1,
     options?: ConverterOptions
   ) {
     super(value)
-    this.scalar = Real.toReal(scalar)
+    this.domainScalar = Real.toReal(domainScalar)
     this.options = options
   }
 
@@ -24,12 +24,8 @@ export class ConvertibleValue extends Real {
     return Real.parse(text)
   }
 
-  of(domainScalarProvider: () => RealInput) {
-    return new ConvertibleValue(
-      this.value,
-      domainScalarProvider(),
-      this.options
-    )
+  of(domainScalar: RealInput) {
+    return new ConvertibleValue(this.value, domainScalar, this.options)
   }
 
   from(unit: UnitConverter | ConverterCriteria, options?: ConverterOptions) {
@@ -42,12 +38,19 @@ export class ConvertibleValueAndUnit extends ConvertibleValue {
   unit: UnitConverter
 
   constructor(value: ConvertibleValue, unit: UnitConverter) {
-    super(value, value.scalar, value.options)
+    super(value, value.domainScalar, value.options)
     this.unit = unit
   }
 
   toString(): string {
-    return `${this.value.toString()} (${this.scalar}) ${this.unit.symbol}`
+    return `${this.value.toString()} (${this.domainScalar}) ${this.unit.symbol}`
+  }
+
+  of(domainScalar: RealInput) {
+    return new ConvertibleValueAndUnit(
+      new ConvertibleValue(this, domainScalar, this.options),
+      this.unit
+    )
   }
 
   to(unit: UnitConverter | ConverterCriteria, options?: ConverterOptions) {
@@ -56,7 +59,7 @@ export class ConvertibleValueAndUnit extends ConvertibleValue {
       this.unit,
       this.value,
       converter,
-      this.scalar
+      this.domainScalar
     )
     if (value === undefined) {
       throw new Error('Conversion failed')
