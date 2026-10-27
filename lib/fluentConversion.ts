@@ -32,7 +32,10 @@ export class ConvertibleValue extends Real {
     return new ConvertibleValue(this, this.domainScalar, options)
   }
 
-  from(unit: UnitConverter | ConverterCriteria, options?: ConverterOptions) {
+  from(
+    unit: string | ConverterCriteria | UnitConverter,
+    options?: ConverterOptions
+  ) {
     const converter = REPOSITORY.toConverter(unit, options ?? this.options)
     return new ConvertibleValueAndUnit(this, converter)
   }
@@ -64,7 +67,10 @@ export class ConvertibleValueAndUnit extends ConvertibleValue {
     )
   }
 
-  to(unit: UnitConverter | ConverterCriteria, options?: ConverterOptions) {
+  to(
+    unit: string | ConverterCriteria | UnitConverter,
+    options?: ConverterOptions
+  ) {
     const converter = REPOSITORY.toConverter(unit, options ?? this.options)
     const value = REPOSITORY.convert(
       this.unit,

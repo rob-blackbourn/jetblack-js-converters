@@ -72,7 +72,7 @@ export class ConverterRepository {
   }
 
   toConverter(
-    criteria: ConverterCriteria | UnitConverter,
+    criteria: string | ConverterCriteria | UnitConverter,
     options?: ConverterOptions
   ): UnitConverter {
     if (criteria instanceof UnitConverter) {
@@ -86,7 +86,7 @@ export class ConverterRepository {
   }
 
   find(
-    criteria: ConverterCriteria,
+    criteria: string | ConverterCriteria,
     options?: ConverterOptions
   ): UnitConverter | undefined {
     let possibles = this.findAll(criteria, options ?? {})
@@ -95,9 +95,12 @@ export class ConverterRepository {
   }
 
   findAll(
-    criteria: ConverterCriteria,
+    criteria: string | ConverterCriteria,
     options?: ConverterOptions
   ): UnitConverter[] {
+    if (typeof criteria === 'string') {
+      criteria = { symbol: criteria } as ConverterCriteria
+    }
     let possibles = this._converters
     possibles = ConverterRepository.filter(
       possibles,
